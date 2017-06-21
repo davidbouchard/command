@@ -28,102 +28,100 @@
 package deadpixel.command;
 
 import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
+import java.io.IOException;
 
-import processing.core.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * 
  * @example Hello
  * 
- *          (the tag @example followed by the name of an example included in
- *          folder 'examples' will automatically include the example in the
- *          javadoc.)
+ * (the tag @example followed by the name of an example included in
+ * folder 'examples' will automatically include the example in the javadoc.)
  * 
  */
 
 public class Command {
+  public static final String VERSION = "##library.prettyVersion##";
 
-	private String command;
-	private ArrayList<String> outputBuffer;
-	private Runtime runtime;
-	private boolean success = false;
+  protected final Collection<String> outputBuffer = new ArrayList<>();
+  protected final Runtime runtime = Runtime.getRuntime();
 
-	public final static String VERSION = "##library.prettyVersion##";
+  public String command;
+  public boolean success;
 
-	/**
-	 * 
-	 */
-	public Command(String theCommand) {
-		command = theCommand;
-		outputBuffer = new ArrayList<String>();
-		runtime = Runtime.getRuntime();
-	}
+  /**
+   * 
+   */
+  public Command(final String theCommand) {
+    command = theCommand;
+  }
 
-	/**
-	 * Runs the command. Returns true if the command was successful, false
-	 * otherwise. The output of the command can be accessed by calling
-	 * getOutput()
-	 * 
-	 * @return true if the command ran successfully, false if there was an error running the command 
-	 */
-	public boolean run() {
-		outputBuffer.clear();
-		try {
-			Process process = runtime.exec(command);
+  /**
+   * Runs the command. Returns true if the command was successful.
+   * The output of the command can be accessed by calling getOutput().
+   * 
+   * @return true if the command ran successfully,
+   * false if there was an error running the command.
+   */
+  public boolean run() {
+    success = false;
+    outputBuffer.clear();
 
-			// Capture the output
-			InputStream stdin = process.getInputStream();
-			InputStreamReader isr = new InputStreamReader(stdin);
-			BufferedReader br = new BufferedReader(isr);
-			String line = null;
-			while ((line = br.readLine()) != null) {
-				outputBuffer.add(line);
-			}
+    try {
+      final Process process = runtime.exec(command);
+      final String msg = "COMMAND ERROR(s):\n";
+      final StringBuilder sb = new StringBuilder(msg);
 
-			// Capture the errors
-			InputStream stderr = process.getErrorStream();
-			isr = new InputStreamReader(stderr);
-			br = new BufferedReader(isr);
-			while ((line = br.readLine()) != null) {
-				PApplet.println("COMMAND ERROR: " + line);
-			}
+      BufferedReader br;
+      String line;  
 
-			int returnCode = process.waitFor();
-			if (returnCode == 0)
-				success = true;
-			else
-				success = false;
-		} catch (IOException e) {
-			PApplet.println("COMMAND ERROR: " + e.getMessage());
-			success = false;
-		} catch (InterruptedException e) {
-			PApplet.println("COMMAND INTERRUPTED! " + e.getMessage());
-			success = false;
-		}
+      // Capture the output
+      br = new BufferedReader(new InputStreamReader(process.getInputStream()));
+      while ((line = br.readLine()) != null)  outputBuffer.add(line);
 
-		return success;
-	}
+      // Capture the errors
+      br = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+      while ((line = br.readLine()) != null)  sb.append(line).append('\n');
+      if (sb.length() != msg.length())  System.err.println(sb);
 
-	/**
-	 * Returns each line of the command's output as an array of String objects. Useful if you need to capture the results 
-	 * from running a command. 
-	 */
-	public String[] getOutput() {
-		String[] dummy = new String[0];
-		return (String[]) outputBuffer.toArray(dummy);
-	}
+      success = process.waitFor() == 0;
+    }
+    catch (final IOException e) {
+      System.err.println("COMMAND ERROR: " + e.getMessage());
+    }
+    catch (final InterruptedException e) {
+      System.err.println("COMMAND INTERRUPTED: " + e.getMessage());
+    }
 
-	/**
-	 * return the version of the library.
-	 * 
-	 * @return String
-	 */
-	public static String version() {
-		return VERSION;
-	}
+    return success;
+  }
 
+  /**
+   * Returns each line of the command's output as an Array of String objects.
+   * Useful if you need to capture the results from running a command. 
+   */
+  public String[] getOutput() {
+    return outputBuffer.toArray(new String[outputBuffer.size()]);
+  }
+
+  /**
+   * Returns each line of the command's output as a List of String objects.
+   * Useful if you need to capture the results from running a command. 
+   */
+  public <T extends String> List<T> getOutputAsList() {
+    return (List<T>) ( (ArrayList<T>) outputBuffer ).clone();
+  }
+
+  /**
+   * Returns the command String being used.
+   * 
+   * @return String
+   */
+  @Override public String toString() {
+    return command + ' ' + success;
+  }
 }
