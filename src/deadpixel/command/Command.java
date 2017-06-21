@@ -31,7 +31,6 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.IOException;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -47,7 +46,7 @@ import java.util.ArrayList;
 public class Command {
   public static final String VERSION = "##library.prettyVersion##";
 
-  protected final Collection<String> outputBuffer = new ArrayList<>();
+  protected final ArrayList<String> outputBuffer = new ArrayList<>();
   protected final Runtime runtime = Runtime.getRuntime();
 
   public String command;
@@ -112,8 +111,8 @@ public class Command {
    * Returns each line of the command's output as a List of String objects.
    * Useful if you need to capture the results from running a command. 
    */
-  public <T extends String> List<T> getOutputAsList() {
-    return (List<T>) ( (ArrayList<T>) outputBuffer ).clone();
+  public List<String> getOutputAsList() {
+    return (List<String>) outputBuffer.clone();
   }
 
   /**
