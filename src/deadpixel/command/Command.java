@@ -9,17 +9,17 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General
  * Public License along with this library; if not, write to the
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA  02111-1307  USA
- * 
+ *
  * @author      ##author##
  * @modified    ##date##
  * @version     ##library.prettyVersion## (##library.version##)
@@ -35,12 +35,12 @@ import java.util.List;
 import java.util.ArrayList;
 
 /**
- * 
+ *
  * @example Hello
- * 
+ *
  * (the tag @example followed by the name of an example included in
  * folder 'examples' will automatically include the example in the javadoc.)
- * 
+ *
  */
 
 public class Command {
@@ -62,7 +62,7 @@ public class Command {
   /**
    * Runs the command. Returns true if the command was successful.
    * The output of the command can be accessed by calling getOutput().
-   * 
+   *
    * @return true if the command ran successfully,
    * false if there was an error running the command.
    */
@@ -76,7 +76,7 @@ public class Command {
       final StringBuilder sb = new StringBuilder(msg);
 
       BufferedReader br;
-      String line;  
+      String line;
 
       // Capture the output
       br = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -117,7 +117,7 @@ public class Command {
 
   /**
    * Returns the command String being used.
-   * 
+   *
    * @return String
    */
   @Override public String toString() {
