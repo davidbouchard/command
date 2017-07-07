@@ -72,6 +72,8 @@ public class Command {
 
     try {
       final Process process = runtime.exec(command);
+      success = process.waitFor() == 0;
+
       final String msg = "COMMAND ERROR(s):\n";
       final StringBuilder sb = new StringBuilder(msg);
 
@@ -86,8 +88,6 @@ public class Command {
       br = new BufferedReader(new InputStreamReader(process.getErrorStream()));
       while ((line = br.readLine()) != null)  sb.append(line).append('\n');
       if (sb.length() != msg.length())  System.err.println(sb);
-
-      success = process.waitFor() == 0;
     }
     catch (final IOException e) {
       System.err.println("COMMAND ERROR: " + e.getMessage());
