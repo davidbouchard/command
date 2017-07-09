@@ -110,7 +110,7 @@ public class Command {
    * Returns each line of the command's output as a List of String objects.
    * Useful if you need to capture the results from running a command. 
    */
-  public List<String> getOutputAsList() {
+  @SuppressWarnings("unchecked") public List<String> getOutputAsList() {
     return (List<String>) outputBuffer.clone();
   }
 
