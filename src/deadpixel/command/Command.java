@@ -70,14 +70,12 @@ public class Command {
     success = false;
     outputBuffer.clear();
 
-    try {
+     try {
       final Process process = runtime.exec(command);
 
       final BufferedReader
         out = new BufferedReader(new InputStreamReader(process.getInputStream())), 
         err = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-
-      success = process.waitFor() == 0;
 
       String read;
       while ((read = out.readLine()) != null)  outputBuffer.add(read);
@@ -87,6 +85,8 @@ public class Command {
 
       while ((read = err.readLine()) != null)  sb.append(read).append('\n');
       if (sb.length() != msg.length())  System.err.println(sb);
+
+      success = process.waitFor() == 0;
     }
     catch (final IOException e) {
       System.err.println("COMMAND ERROR: " + e.getMessage());
